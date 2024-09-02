@@ -6,3 +6,43 @@ info:
 servers:
   - url: https://api-football.com/rnt
 paths:
+  /competitions:
+    get:
+      summary: Get a list of competitions
+      description: Retrieve a paginated list of competitions.
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: pageSize
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: A paginated list of competitions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionList'
+    post:
+      summary: Create a new competition
+      description: Add a new competition to the list.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewCompetition'
+      responses:
+        '201':
+          description: Competition created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Competition'
