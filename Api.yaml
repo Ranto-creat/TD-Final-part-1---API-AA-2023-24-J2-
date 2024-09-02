@@ -3,8 +3,10 @@ info:
   title: Football Competition Management API
   description: API for managing football competitions, teams, and players.
   version: 1.0.0
+
 servers:
-  - url: https://api-football.com/rnt
+  - url: https://api.football-competition.com/v1
+
 paths:
   /competitions:
     get:
@@ -46,3 +48,228 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Competition'
+
+  /teams:
+    get:
+      summary: Get a list of teams
+      description: Retrieve a paginated list of teams, optionally filtered by team name.
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: pageSize
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 10
+        - name: teamName
+          in: query
+          required: false
+          schema:
+            type: string
+            example: Real Madrid
+          description: Filter teams by name
+      responses:
+        '200':
+          description: A paginated list of teams
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamList'
+    post:
+      summary: Create a new team
+      description: Add a new team to the list.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTeam'
+      responses:
+        '201':
+          description: Team created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+
+  /players:
+    post:
+      summary: Create a new player
+      description: Add a new player to the list.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPlayer'
+      responses:
+        '201':
+          description: Player created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+
+components:
+  schemas:
+    Competition:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        location:
+          type: string
+      required:
+        - id
+        - name
+        - location
+
+    NewCompetition:
+      type: object
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+      required:
+        - name
+        - location
+
+    CompetitionList:
+      type: object
+      properties:
+        competitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Competition'
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        total:
+          type: integer
+
+    Team:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        slogan:
+          type: string
+        competitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Competition'
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/Player'
+      required:
+        - id
+        - name
+        - slogan
+
+    NewTeam:
+      type: object
+      properties:
+        name:
+          type: string
+        slogan:
+          type: string
+      required:
+        - name
+        - slogan
+
+    TeamList:
+      type: object
+      properties:
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/Team'
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        total:
+          type: integer
+
+    TeamCompetitions:
+      type: object
+      properties:
+        competitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Competition'
+      required:
+        - competitions
+
+    Player:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        number:
+          type: integer
+        strongFoot:
+          type: string
+          enum:
+            - Left
+            - Right
+      required:
+        - id
+        - name
+        - number
+        - strongFoot
+
+    NewPlayer:
+      type: object
+      properties:
+        name:
+          type: string
+        number:
+          type: integer
+        strongFoot:
+          type: string
+          enum:
+            - Left
+            - Right
+      required:
+        - name
+        - number
+        - strongFoot
+
+    PlayerList:
+      type: object
+      properties:
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/Player'
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        total:
+          type: integer
+
+    TeamPlayers:
+      type: object
+      properties:
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/Player'
+      required:
+        - players
