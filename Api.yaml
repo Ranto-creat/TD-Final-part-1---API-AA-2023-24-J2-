@@ -115,6 +115,82 @@ paths:
               schema:
                 $ref: '#/components/schemas/Player'
 
+  /teams/{teamId}/competitions:
+    post:
+      summary: Associate a team with competitions
+      description: Assign a list of competitions to a specific team.
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamCompetitions'
+      responses:
+        '200':
+          description: Team competitions updated successfully
+
+  /teams/{teamId}/players:
+    get:
+      summary: Get a list of players in a team
+      description: Retrieve a paginated list of players in a team, optionally filtered by player name.
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: pageSize
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 10
+        - name: playerName
+          in: query
+          required: false
+          schema:
+            type: string
+            example: Lionel Messi
+          description: Filter players by name
+      responses:
+        '200':
+          description: A paginated list of players in the team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerList'
+
+    post:
+      summary: Add players to a team
+      description: Associate a list of players with a specific team.
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamPlayers'
+      responses:
+        '200':
+          description: Players added to the team successfully
+
 components:
   schemas:
     Competition:
